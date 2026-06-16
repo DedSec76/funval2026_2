@@ -4,37 +4,37 @@ import Card  from './Card.jsx';
 const team = [
   {
     name: "Bill Mahoney",
-    photo: "/public/images/photo1.png",
+    photo: "/images/photo1.png",
     role: "Product Owner",
     description: "Is a good boy"
   },
   {
     name: "Saba Cabrera",
-    photo: "/public/images/photo2.png",
+    photo: "/images/photo2.png",
     role: "Art Director",
     description: "Is a good girl"
   },
   {
     name: "Shae Le",
-    photo: "/public/images/photo3.png",
+    photo: "/images/photo3.png",
     role: "Tech Lead",
     description: "Is a good boy"
   },
   {
     name: "Skylah Lu",
-    photo: "/public/images/photo4.png",
+    photo: "/images/photo4.png",
     role: "UX Designer",
     description: "Is a good boy"
   },
   {
     name: "Griff Richards",
-    photo: "/public/images/photo5.png",
+    photo: "/images/photo5.png",
     role: "Developer",
     description: "Is a good boy"
   },
   {
     name: "Stan John",
-    photo: "/public/images/photo6.png",
+    photo: "/images/photo6.png",
     role: "Developer",
     description: "Is a good boy"
   },
@@ -51,7 +51,7 @@ export default function App() {
         <div className=" flex gap-2">
           <h1 className="text-3xl md:text-4xl font-bold">The creative crew</h1>
           <button className='absolute -top-6 right-1 cursor-pointer hover:brightness-85'>
-            <img src="/public/icons/moon.png" alt="Imange de Luna para boton darkmode" />
+            <img src="/icons/moon.png" alt="Imange de Luna para boton darkmode" />
           </button>
         </div>
 
