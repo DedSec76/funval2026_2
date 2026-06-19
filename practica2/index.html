@@ -1,0 +1,28 @@
+<!doctype html>
+<html class="light" lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>React Wallet - Expense Tracker</title>
+    <link rel="stylesheet" href="/src/index.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  </head>
+  <body class="bg-background min-h-screen flex items-center justify-center p-6 text-foreground transition-colors duration-300">
+    
+    <!-- Main App Container -->
+    <div class="max-w-4xl w-full bg-card rounded-xl shadow-2xl overflow-hidden border border-border" 
+         id="root">
+    </div>
+
+    <!-- Theme Toggle (Bonus functionality visual) -->
+    <div class="fixed bottom-6 right-6 flex flex-col gap-3">
+        <button class="cursor-pointer w-12 h-12 bg-card rounded-full shadow-lg flex items-center justify-center text-slate-500 dark:text-primary border border-slate-100 dark:border-primary/20 hover:scale-110 transition-transform"
+          onclick="document.documentElement.classList.toggle('dark')">
+          <span class="material-symbols-outlined">dark_mode</span>
+        </button>
+    </div>
+  
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
