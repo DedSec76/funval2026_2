@@ -1,11 +1,11 @@
 {
   "rewrites": [
     {
-      "source": "/practica1/(.*)",
+      "source": "/practica1",
       "destination": "/practica1/dist/index.html"
     },
     {
-      "source": "/practica2/(.*)",
+      "source": "/practica2",
       "destination": "/practica2/dist/index.html"
     }
   ]
