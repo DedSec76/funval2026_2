@@ -1,12 +1,20 @@
 {
   "rewrites": [
     {
+      "source": "/practica1",
+      "destination": "/practica1/index.html"
+    },
+    {
       "source": "/practica1/(.*)",
-      "destination": "/practica1/dist/$1"
+      "destination": "/practica1/$1"
+    },
+    {
+      "source": "/practica2",
+      "destination": "/practica2/index.html"
     },
     {
       "source": "/practica2/(.*)",
-      "destination": "/practica2/dist/$1"
+      "destination": "/practica2/$1"
     }
   ]
 }
