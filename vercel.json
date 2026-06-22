@@ -1,20 +1,18 @@
 {
-  "rewrites": [
+  "builds": [
     {
-      "source": "/practica1",
-      "destination": "/practica1/index.html"
+      "src": "practica1/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
     },
     {
-      "source": "/practica1/(.*)",
-      "destination": "/practica1/$1"
-    },
-    {
-      "source": "/practica2",
-      "destination": "/practica2/index.html"
-    },
-    {
-      "source": "/practica2/(.*)",
-      "destination": "/practica2/$1"
+      "src": "practica2/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
     }
   ]
 }
