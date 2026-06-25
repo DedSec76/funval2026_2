@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap&family=Material+Symbols+Outlined');
+@import "tailwindcss";
+
+:root {
+    --primary: #1A62FF;
+    --secondary: #0F172A;
+    --tertiary: #C84200;
+    --neutral: #F8FAFC;
+
+    --headline: ;
+    --body: ;
+    --label: ;
+}
+
+@theme {
+    --color-primary: var(--primary);
+    --color-secondary: var(--secondary);
+    --color-tertiary: var(--tertiary);
+    --color-neutral: var(--neutral);
+
+    --font-headline: "DM Sans", sans-serif;
+    --font-body: "Plus Jakarta Sans", sans-serif;
+    --font-label: "Plus Jakarta Sans", sans-serif;
+}
+
+h1,h2,h3,h4 {
+    font-family: var(--headline);
+}
+
+p,span,button,label,a,li {
+    font-family: var(--body);
+}
+
+.material-symbols-outlined {
+    font-variation-settings: 
+        'FILL' 0, 
+        'wght' 400, 
+        'GRAD' 0, 
+        'opsz' 24;
+}
