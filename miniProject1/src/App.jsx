@@ -1,9 +1,8 @@
 import './App.css'
-import { Routes, Route, Link } from "react-router-dom"
+import { Route, Link, HashRouter } from "react-router-dom"
 import Home from "./pages/Home"
 import ProductPage from "./pages/ProductPage"
 import NotFound from "./pages/NotFound"
-import NotProduct from "./pages/NotFound"
 import { useState } from 'react'
 
 export default function App() {
@@ -56,12 +55,11 @@ export default function App() {
                 </div>
             </div>
 
-            <Routes>
+            <HashRouter>
                 <Route path="/" element={<Home />} />
                 <Route path="/products/:id" element={<ProductPage />} />
                 <Route path="*" element={<NotFound />} />
-                <Route path="*/:id" element={<NotProduct />} />
-            </Routes>
+            </HashRouter>
         </>
     )
 }
