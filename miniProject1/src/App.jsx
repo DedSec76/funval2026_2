@@ -1,5 +1,5 @@
 import './App.css'
-import { Route, Link, HashRouter } from "react-router-dom"
+import { Route, Link, HashRouter, Routes } from "react-router-dom"
 import Home from "./pages/Home"
 import ProductPage from "./pages/ProductPage"
 import NotFound from "./pages/NotFound"
@@ -56,9 +56,11 @@ export default function App() {
             </div>
 
             <HashRouter>
-                <Route path="/" element={<Home />} />
-                <Route path="/products/:id" element={<ProductPage />} />
-                <Route path="*" element={<NotFound />} />
+                <Routes> 
+                    <Route path="/" element={<Home />} />
+                    <Route path="/products/:id" element={<ProductPage />} />
+                    <Route path="*" element={<NotFound />} />
+                </Routes>
             </HashRouter>
         </>
     )
