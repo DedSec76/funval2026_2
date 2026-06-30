@@ -23,8 +23,8 @@ export default function ProductPage() {
 
     return (
         <>
-            <div className="mx-5 mt-4">
-                <Link className="flex items-center gap-2 text-primary pb-2 transition duration-300 hover:-translate-x-3" to={"/"}>
+            <div className="mx-5 mt-4 max-w-350 lg:mx-auto">
+                <Link className="flex items-center gap-2 text-primary md:text-lg pb-2 transition duration-300 hover:-translate-x-3" to={"/"}>
                     <span className="material-symbols-outlined no-underline">
                         line_start_arrow_notch
                     </span>

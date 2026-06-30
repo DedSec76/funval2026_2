@@ -6,7 +6,7 @@ export function ProductCard({id, image, category, title, price}) {
         <>
             <div className="transition-transform hover:scale-105">
                 <Link to={`/products/${id}`}>
-                    <img className="bg-neutral rounded-lg h-60 aspect-video" src={image} alt={`Imagen del producto ${title}`} />
+                    <img className="bg-neutral rounded-lg h-60 lg:h-85 aspect-video" src={image} alt={`Imagen del producto ${title}`} />
                     <div className="py-3 flex flex-col gap-2">
                         <p className="text-secondary/90 text-sm md:text-base uppercase">{category}</p>
                         <h3 className="truncate font-bold md:text-lg">{title}</h3>

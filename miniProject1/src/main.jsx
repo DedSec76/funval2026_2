@@ -1,12 +1,15 @@
 import { StrictMode } from "react";
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from "react-router-dom"
 import App from "./App"
+import { HashRouter } from "react-router-dom";
+import { SearchProvider } from "./context/SearchContext"
 
 createRoot(document.getElementById("root")).render(
     <StrictMode>
-        <BrowserRouter>
-            <App />
-        </BrowserRouter>
+        <HashRouter>
+            <SearchProvider>
+                <App />
+            </SearchProvider>
+        </HashRouter>
     </StrictMode>
 )
