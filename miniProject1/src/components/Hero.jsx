@@ -5,7 +5,8 @@ export default function Hero() {
         <>
             <section className="relative
                                 text-center md:text-left px-5 h-115">
-                <div className="bg-[url(/images/imgHero3.png)] opacity-95 h-full bg-center bg-no-repeat bg-cover 
+                <div className="bg-[url(/images/imgHero3.png)] sm:bg-[url(/images/closets.jpg)] 
+                                opacity-95 h-full bg-center bg-no-repeat bg-cover 
                                 py-3">
                     <div className="absolute inset-0 -z-50 bg-secondary/80"></div>
                     {/* Container details hero */}
