@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useState } from "react"
 import { UserContext } from "../context/UserContext"
 
 export default function Dashboard() {
@@ -6,14 +6,8 @@ export default function Dashboard() {
     
     const [newName, setNewName] = useState(user.name)
 
-    useEffect(() => {
-        setNewName(user.name)
-    }, [user.name])
-
     function handleSubmit(e) {
         e.preventDefault()
-
-        
 
         if(user.name === newName.trim()) return;
 
