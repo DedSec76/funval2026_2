@@ -1,9 +1,24 @@
-import { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import { UserContext } from "../context/UserContext"
 
 export default function Dashboard() {
     const { user, setUser, theme, setTheme } = useContext(UserContext);
-    console.log(theme)
+    
+    const [newName, setNewName] = useState(user.name)
+
+    useEffect(() => {
+        setNewName(user.name)
+    }, [user.name])
+
+    function handleSubmit(e) {
+        e.preventDefault()
+
+        
+
+        if(user.name === newName.trim()) return;
+
+        setUser({...user, name: newName.trim()})
+    }
 
     return (
         <>
@@ -35,15 +50,15 @@ export default function Dashboard() {
                         <h2 className="font-semibold text-xl text-primary-text">Profile Settings</h2>
                     </div>
                     
-                    <form className="flex flex-col">
+                    <form onSubmit={handleSubmit} className="flex flex-col">
                         <label className="text-secondary-text font-semibold mb-1">Full Name</label>
-                        <input className="p-2 border border-secondary-text/20 text-primary-text/80 shadow mb-3 rounded-md" type="text" value={user.name} readOnly />
+                        <input onChange={(e) => setNewName(e.target.value)} className="p-2 border border-secondary-text/20 text-primary-text/80 shadow mb-3 rounded-md" type="text" placeholder={user.name} />
 
                         <label className="text-secondary-text font-semibold mb-1">Email Address</label>
                         <input className="p-2 border border-secondary-text/20 text-primary-text/80 shadow mb-3 rounded-md" type="email" value={user.email} readOnly/>
                         
                         <div className="flex justify-end">
-                            <input className="cursor-pointer mt-8 text-primary-text bg-primary py-2 px-8 rounded-lg font-semibold hover:bg-primary/80" type="submit" value="Save Changes" />
+                            <input className="cursor-pointer mt-8 text-container bg-primary py-2 px-8 rounded-lg font-semibold hover:bg-primary/80" type="submit" value="Save Changes" />
                         </div>
                     </form>
                     
