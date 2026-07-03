@@ -1,8 +1,11 @@
+import { Link } from "react-router-dom";
 
 export default function Home() {
     return (
         <>
-           <h2 className="text-center">Home</h2>
+           <nav>
+                <Link className="block p-10 text-center text-4xl" to={"/login"}>Login</Link>
+           </nav>
         </>
     )
 }

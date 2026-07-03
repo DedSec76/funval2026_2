@@ -1,7 +1,7 @@
 import './App.css'
 import { Routes, Route, Navigate } from "react-router-dom"
-import Home from "./pages/Home"
 import Login from './pages/Login'
+import Home from "./pages/Home"
 import Dashboard from './pages/Dashboard'
 import NotFound from "./pages/NotFound"
 import { UserContext } from './context/UserContext'
@@ -15,7 +15,6 @@ export default function App() {
             
             <Routes> 
                 <Route path="/" element={<Home />} />
-
                 <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to={"/login"}/>} />
                 <Route path="/login" element={!user ? <Login /> : <Navigate to={"/dashboard"}/>} />
                 
