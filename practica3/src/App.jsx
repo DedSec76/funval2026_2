@@ -5,10 +5,14 @@ import Home from "./pages/Home"
 import Dashboard from './pages/Dashboard'
 import NotFound from "./pages/NotFound"
 import { UserContext } from './context/UserContext'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 
 export default function App() {
-    const { user } = useContext(UserContext)
+    const { user, theme } = useContext(UserContext);
+
+    useEffect(() => {
+        document.documentElement.classList.toggle("dark", theme==="dark");
+    }, [theme])
     
     return (
         <>

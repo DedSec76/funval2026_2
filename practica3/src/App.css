@@ -1,26 +1,37 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap&family=Material+Symbols+Outlined');
 @import "tailwindcss";
 
-:root {
-    --primary: #1A62FF;
-    --secondary: #0F172A;
-    --tertiary: #C84200;
-    --neutral: #F8FAFC;
+@custom-variant dark (&:where(.dark, .dark *));
 
-    --headline: ;
-    --body: ;
-    --label: ;
+:root {
+    --primary: #6b21a8;
+
+    --background: #f9f9ff;
+    --container: #fff;
+
+    --primary-text: #000;
+    --secondary-text: #4b5563;
+}
+
+.dark {
+    --primary: #a855f7;
+    
+    --background: #0f172a;
+    --container: #1e293b;
+
+    --primary-text: #f8fafc; 
+    --secondary-text: #94a3b8;
 }
 
 @theme {
     --color-primary: var(--primary);
-    --color-secondary: var(--secondary);
-    --color-tertiary: var(--tertiary);
-    --color-neutral: var(--neutral);
+    --color-background: var(--background);
+    --color-container: var(--container);
+    --color-primary-text: var(--primary-text);
+    --color-secondary-text: var(--secondary-text);
 
     --font-headline: "DM Sans", sans-serif;
     --font-body: "Plus Jakarta Sans", sans-serif;
-    --font-label: "Plus Jakarta Sans", sans-serif;
 }
 
 h1,h2,h3,h4 {
