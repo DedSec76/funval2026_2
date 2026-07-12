@@ -1,171 +1,206 @@
+import { useEffect, useState } from "react"
+import { useWeather } from "./hooks/useWeather"
+import Footer from "./components/Footer"
+import Header from "./components/Header"
+import { formatDate } from "./utils/FormatDate"
+import ModalSearchLocation from "./components/ModalSearchLocation"
+import ButtonLight from "./components/ButtonLight"
+import { useLightMode } from "./hooks/useLightMode"
 
 export default function App() {
+  // Aplicando lightmode / darkmode
+  const [status, toggle] = useLightMode();
   
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", status)
+  }, [status])
+
+  const [openModal, setOpenModal] = useState(false);
+  const [citySelected, setCitySelected] = useState(null);
+  const [location, setLocation] = useState("");
+
+  const apiKey = import.meta.env.VITE_API_KEY
+  const [lat, setLat ] = useState(-12.026180)
+  const [lon, setLon ] = useState(-76.898031)
+  const [units, setUnits] = useState("metric")
+
+  // Span que cambia la medida
+  const unitSpan = units === "metric" ? "ºC" : "ºF";
+  
+  // Consumimos nuestra API mediante hook
+  const {weather, error, loading} = useWeather(`
+    https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=${units}`)
+
+  if(loading) return <p>espere cargando...</p>
+  if(error) return <p>{error}</p>
+
+  // Destructuramos los datos de la API
+  const weatherToday = weather.list[0]
+  const todayTemp = weatherToday.weather[0]
+
+  // Filtramos los 5 días de pronostico
+  const only5 = weather.list.filter((w, i) => i % 8 === 0)
+
+  // Función que maneja el botón de localización
+  function handleLocation() {
+    if(navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        function (position) {
+          setLat(position.coords.latitude)
+          setLon(position.coords.longitude)
+        }
+      )
+    } else {
+      console.log("Geolocation is not supported by this browser")
+    }
+  }
+
+  // Dirección del viento
+  let windDirection;
+  if(weatherToday.wind.deg > 0 && 
+     weatherToday.wind.deg <= 45) {
+      windDirection = "NE"
+  } else if (weatherToday.wind.deg <= 135) {
+    windDirection = "SE"
+  } else if (weatherToday.wind.deg <= 225) {
+    windDirection = "SW"
+  } else {
+    windDirection = "NW"
+  }
+
   return (
     <>
-      <section className="bg-[#1E213A] flex flex-col w-screen h-screen overflow-hidden md:w-[30%] md:min-w-95 md:m-auto">
-        <header className="flex justify-around items-end h-16">
-          <input className="w-44 h-9 bg-[#6E707A] text-[#E7E7EB] cursor-pointer text-center" type="button" value="Search for Places" />
+      <section className="bg-bg flex flex-col w-screen h-screen overflow-hidden md:w-[30%] md:min-w-95 md:m-auto">
+        {/* Header Principal */}
+        <Header toggle={setOpenModal} fn={handleLocation} />
 
-          <div className="flex items-center justify-center w-10 h-10 bg-[#ffffff33] 
-              rounded-full cursor-pointer">
-            <img 
-                loading="lazy"
-                width="25"
-                height="25"
-                src="/images/svg/location.svg" 
-                alt="Botón para obtener localizacion actual" 
-            />
-          </div>
-        </header>
-
+        {/* Vista Principal de temperatura */}
         <div className="flex flex-col items-center w-full h-[90vh]">
           <div className="flex flex-col items-center justify-center w-full h-[45%] relative overflow-hidden after:bg-[url(/images/cloudBackground.png)] after:absolute
                 after:w-full after:h-full after:bg-size-[150%_110%] after:bg-no-repeat after:opacity-5 after:bg-position-[bottom_center]"
           >
-            <div className="flex items-center justify-center w-2/5 absolute">
-              <img className="w-full object-contain" src="/images/weather/01n.png" alt="condición" loading="300" width="300" height="300" />
+            <div className="bg-[#1e213a] rounded-full pb-8 pr-16 flex items-center justify-center w-2/5 absolute">
+              <img className="w-full object-contain" src={`/images/weather/${todayTemp.icon}.png`} alt="condición" loading="300" width="300" height="300" />
             </div>
           </div>
+
           <div className="flex items-center">
-            <h2 className="font-medium text-9xl text-[#E7E7EB] my-8">22</h2>
-            <h3 className=" mt-6 text-6xl text-[#A09FB1] font-medium">ºC</h3>
+            <h2 className="font-medium text-9xl text-text-heading my-8">{weatherToday.main.temp.toFixed(0)}</h2>
+            <h3 className=" mt-6 text-6xl text-text font-medium">{unitSpan}</h3>
           </div>
-          <h2 className="capitalize pt-6 pb-12 text-3xl text-[#A09FB1] font-semibold">clear sky</h2>
-          <p className="text-sm text-[#88869D] font-medium mb-6"></p>
-          <div className="flex items-center gap-2 text-sm text-[#88869D] h-10  bottom-0 font-semibold mb-2">
-            <img loading="lazy" width="20" height="20" className="mb-2" src="/public/images/svg/location_on.svg" alt="Icono de localización" />
-            Chosica
+
+          <h2 className="capitalize pt-6 pb-12 text-3xl text-text font-semibold">{todayTemp.description}</h2>
+          <p className="text-sm text-text font-medium mb-6">Today &nbsp;&nbsp; . &nbsp;&nbsp; {formatDate(weatherToday.dt_txt)}</p>
+
+          <div className="flex items-center gap-2 text-sm text-text h-10  bottom-0 font-semibold mb-2">
+            <img loading="lazy" width="20" height="20" className="mb-2" src="/images/svg/location_on.svg" alt="Icono de localización" />
+            {weather.city.name}
           </div>
 
         </div>
       </section>
 
-      <div className="w-full h-fit min-h-screen flex flex-col items-center bg-[#100E1D] md:w-[70%] md:min-w-145 md:max-h-screen">
+      <div className="w-full h-fit min-h-screen flex flex-col items-center bg-bg2 md:w-[70%] md:min-w-145 md:max-h-screen">
+        
+        {/* Botones para cambiar medida */}
         <div className="flex justify-end items-end h-20 w-64 gap-5 md:max-w-2xl md:w-full">
-          <button className=" w-10 h-10 pr-1 pt-1 text-center text-xl font-bold text-[#110E3C]  bg-[#E7E7EB] rounded-full">ºC</button>
-          <button className="w-10 h-10 pr-1 pt-1 text-center text-xl font-bold text-[#E7E7EB]  bg-[#585676] rounded-full">ºF</button>
+          <button onClick={() => setUnits("metric")} className="cursor-pointer w-10 h-10 pr-1 pt-1 text-center text-xl font-bold text-text-heading  bg-bg rounded-full">ºC</button>
+          <button onClick={() => setUnits("imperial")} className="cursor-pointer w-10 h-10 pr-1 pt-1 text-center text-xl font-bold text-bg2  bg-text rounded-full">ºF</button>
         </div>
-
+        
+        {/* Pronostico por 5 Días */}
         <section className="w-full md:px-5">
           <ul className="grid grid-cols-2 w-fit mx-auto gap-5 mt-5 md:max-w-2xl md:flex md:flex-row md:flex-wrap md:gap-4 md:w-fit">
-            <li className="w-30 h-40 bg-[#1E213A] flex flex-col items-center justify-center text-[#E7E7EB] text-base font-medium">
-              <h3 className="mb-2">Tomorrow</h3>
-              <span className="flex items-center justify-center w-14 h-16">
-                <img src="/images/weather/01d.png" alt="condition" loading="lazy" width="56" height="64" className="w-full h-full object-contain"  />
-              </span>
-              <div className=" flex gap-2 mt-2">
-                <p>26ºC</p>
-                <p className="text-[#A09FB1]">19ºC</p>
-              </div>
-            </li>
+            {only5.map((w, i) => (
+              <li key={w.dt} className="w-30 h-40 bg-bg flex flex-col items-center justify-center text-text-heading text-base font-medium">
+                <h3 className="mb-2">
+                    { i === 0
+                    ? "Tomorrow" 
+                    : formatDate(w.dt_txt)}
+                </h3>
 
-            <li className="w-30 h-40 bg-[#1E213A] flex flex-col items-center justify-center text-[#E7E7EB] text-base font-medium">
-              <h3 className="mb-2">Tomorrow</h3>
-              <span className="flex items-center justify-center w-14 h-16">
-                <img src="/images/weather/01d.png" alt="condition" loading="lazy" width="56" height="64" className="w-full h-full object-contain"  />
-              </span>
-              <div className=" flex gap-2 mt-2">
-                <p>26ºC</p>
-                <p className="text-[#A09FB1]">19ºC</p>
-              </div>
-            </li>
+                <span className="bg-bg2 rounded-full pr-2 flex items-center justify-center w-14 h-16">
+                  <img src={`/images/weather/${w.weather[0].icon}.png`} alt="condition" loading="lazy" width="56" height="64" className="w-full h-full object-contain"  />
+                </span>
 
-            <li className="w-30 h-40 bg-[#1E213A] flex flex-col items-center justify-center text-[#E7E7EB] text-base font-medium">
-              <h3 className="mb-2">Tomorrow</h3>
-              <span className="flex items-center justify-center w-14 h-16">
-                <img src="/images/weather/01d.png" alt="condition" loading="lazy" width="56" height="64" className="w-full h-full object-contain"  />
-              </span>
-              <div className=" flex gap-2 mt-2">
-                <p>26ºC</p>
-                <p className="text-[#A09FB1]">19ºC</p>
-              </div>
-            </li>
-
-            <li className="w-30 h-40 bg-[#1E213A] flex flex-col items-center justify-center text-[#E7E7EB] text-base font-medium">
-              <h3 className="mb-2">Tomorrow</h3>
-              <span className="flex items-center justify-center w-14 h-16">
-                <img src="/images/weather/01d.png" alt="condition" loading="lazy" width="56" height="64" className="w-full h-full object-contain"  />
-              </span>
-              <div className=" flex gap-2 mt-2">
-                <p>26ºC</p>
-                <p className="text-[#A09FB1]">19ºC</p>
-              </div>
-            </li>
-
-            <li className="w-30 h-40 bg-[#1E213A] flex flex-col items-center justify-center text-[#E7E7EB] text-base font-medium">
-              <h3 className="mb-2">Tomorrow</h3>
-              <span className="flex items-center justify-center w-14 h-16">
-                <img src="/images/weather/01d.png" alt="condition" loading="lazy" width="56" height="64" className="w-full h-full object-contain"  />
-              </span>
-              <div className=" flex gap-2 mt-2">
-                <p>26ºC</p>
-                <p className="text-[#A09FB1]">19ºC</p>
-              </div>
-            </li>
+                <div className=" flex gap-2 mt-2">
+                  <p>{w.main.temp.toFixed(0)} {unitSpan}</p>
+                  <p className="text-text">{w.main.temp_min.toFixed()} {unitSpan}</p>
+                </div>
+              </li>
+              
+            ))
+            }
           </ul>
         </section>
 
+        {/* Lo destacado de hoy */}
         <div className=" w-full max-w-sm px-5 mt-12 md:w-full md:max-w-none md:m-auto md:flex md:flex-col md:items-center md:justify-center">
-          <h2 className=" h-7 text-[#E7E7EB] text-2xl font-bold my-5 md:w-full md:max-w-2xl md:text-left">Today's Hightlights</h2>
+          <h2 className=" h-7 text-text-heading text-2xl font-bold my-5 md:w-full md:max-w-2xl md:text-left">Today's Hightlights</h2>
           <div className="w-full flex flex-col items-center md:grid md:grid-cols-2  gap-5 md:gap-6 md:max-w-2xl">
-            <div className="w-full max-w-82 h-48 bg-[#1E213A] flex flex-col items-center justify-center">
-              <h2 className="text-medium text-base text-center text-[#E7E7EB]">Wind status</h2>
+            
+            {/* Estado del viento */}
+            <div className="w-full max-w-82 h-48 bg-bg flex flex-col items-center justify-center">
+              <h2 className="text-medium text-base text-center text-text-heading">Wind status</h2>
               <div className="flex items-end h-20 mb-4">
-                <h3 className="text-[#E7E7EB] text-6xl font-bold">0.70</h3>
-                <h4 className="text-[#E7E7EB] text-4xl mb-2 ml-1">ms</h4>
+                <h3 className="text-text-heading text-6xl font-bold">{weatherToday.wind.speed}</h3>
+                <h4 className="text-text-heading text-4xl mb-2 ml-1">{units === "metric" ? "ms" : "mph"}</h4>
               </div>
-              <div className="flex items-center text-[#E7E7EB] text-sm">
-                <span className="flex justify-center items-center w-8 h-8 m-3 rounded-full bg-[#ffffff4d]">
-                  <img className="text-transparent rotate-320" width="18" height="18" src="/images/svg/navigation.svg" alt="Icono de navegacion" />
+              <div className="flex items-center text-text text-sm">
+                <span className="flex justify-center items-center w-8 h-8 m-3 rounded-full bg-text/65">
+                  <img className="text-text" width="18" height="18" style={{rotate: `${weatherToday.wind.deg}deg`}} src="/images/svg/navigation.svg" alt="Icono de navegacion" />
                 </span>
-                NW
+                { windDirection }
               </div>
             </div>
 
-            <div className="w-full max-w-82 h-48 bg-[#1E213A] flex flex-col items-center justify-center">
-              <h2 className="text-medium text-base text-center text-[#E7E7EB]">Humidity</h2>
+            {/* Humedad */}
+            <div className="w-full max-w-82 h-48 bg-bg flex flex-col items-center justify-center">
+              <h2 className="text-medium text-base text-center text-text-heading">Humidity</h2>
               <div className="flex items-end h-20 mb-4">
-                <h3 className="text-[#E7E7EB] text-6xl font-bold">59</h3>
-                <h4 className="text-[#E7E7EB] text-4xl mb-2 ml-1">%</h4>
+                <h3 className="text-text-heading text-6xl font-bold">{weatherToday.main.humidity}</h3>
+                <h4 className="text-text-heading text-4xl mb-2 ml-1">%</h4>
               </div>
-              <div className=" w-[70%] font-bold text-xs flex justify-between text-[#A09FB1]">
+              <div className="w-[70%] font-bold text-xs flex justify-between text-text">
                 <p>0</p>
                 <p>50</p>
                 <p>100</p>
               </div>
-              <div className="flex items-center w-[70%] h-2 bg-[#E7E7EB] rounded-3xl">
-                <div className="h-2 bg-[#FFEC65] rounded-3xl m-0 p-0">
+              <div className="flex items-center w-[70%] h-2 bg-text rounded-3xl">
+                <div className="h-2 bg-[#FFEC65] rounded-3xl m-0 p-0"
+                     style={{width: `${weatherToday.main.humidity}%`}}>
                 </div>
               </div>
-              <div className="w-[70%] text-right font-bold text-[#A09FB1]">%
+              <div className="w-[70%] text-right font-bold text-text">%
               </div>
             </div>
 
-            <div className=" w-full max-w-82 flex flex-col items-center justify-center bg-[#1E213A] py-4">
-              <h2 className="text-medium text-base text-center text-[#E7E7EB]">Visibility</h2>
+            {/* Visibilidad */}
+            <div className=" w-full max-w-82 flex flex-col items-center justify-center bg-bg py-4">
+              <h2 className="text-medium text-base text-center text-text-heading">Visibility</h2>
               <div className="flex items-end h-20 mb-4">
-                <h3 className="text-[#E7E7EB] text-6xl font-bold">10.00</h3>
-                <h4 className="text-[#E7E7EB] text-4xl mb-2 ml-1">km</h4>
+                <h3 className="text-text-heading text-6xl font-bold">{units === "metric" ? (weatherToday.visibility / 1000).toFixed(2) : (weatherToday.visibility / 1609).toFixed(2)}</h3>
+                <h4 className="text-text-heading text-4xl mb-2 ml-1">{units === "metric" ? "km" : "miles"}</h4>
               </div>
             </div>
 
-            <div className="w-full max-w-82 flex flex-col items-center justify-center bg-[#1E213A] p-4">
-              <h2 className="text-medium text-base text-center text-[#E7E7EB]">Air Pressure</h2>
+            {/* Presión del aire */}
+            <div className="w-full max-w-82 flex flex-col items-center justify-center bg-bg p-4">
+              <h2 className="text-medium text-base text-center text-text-heading">Air Pressure</h2>
               <div className="flex items-end h-20 mb-4">
-                <h3 className="text-[#E7E7EB] text-6xl font-bold">1012</h3>
-                <h4 className="text-[#E7E7EB] text-4xl mb-2 ml-1">mb</h4>
+                <h3 className="text-text-heading text-6xl font-bold">{weatherToday.main.pressure}</h3>
+                <h4 className="text-text-heading text-4xl mb-2 ml-1">mb</h4>
               </div>
             </div>
           </div>
 
-          <footer className="py-5 w-full flex flex-row justify-center items-center text-[#A09FB1]">
-            <h4 className="text-sm font-medium text-center">Created by</h4>
-            <h2 className="font-bold text-sm text-center mx-1">Aldair Rutte Bazán</h2>
-            <h3 className="font-semibold text-sm text-center">dedsec.dev</h3>
-          </footer>
+          <Footer />
         </div>
       </div>
+
+      <ModalSearchLocation openModal={openModal} setOpenModal={setOpenModal} setLat={setLat} setLon={setLon} setCitySelected={setCitySelected} location={location} setLocation={setLocation} />
+    
+      <ButtonLight status={status} toggle={toggle} />
     </>
   )
 }
